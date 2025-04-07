@@ -241,6 +241,7 @@ class Estimator():
 
         '''
         Estimate the WCDE using linear double ML or linear regression.
+        Variables must be continuous.
         '''
 
         if linear_regression:

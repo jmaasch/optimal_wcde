@@ -17,6 +17,7 @@ class DataGenerator():
                          x_causes_y: bool = True,
                          xy_coeff: float = 1.0,
                          coefficient_range: tuple = (1.1, 1.25),
+                         exp: int = 1,
                          scale: bool = False):
 
         '''
@@ -29,15 +30,17 @@ class DataGenerator():
         coeff = lambda : np.random.uniform(low = coefficient_range[0],
                                            high = coefficient_range[1],
                                            size = 1)
+
+        fun = lambda x: coeff()*x**exp
         
         # Define variables.
         if not x_causes_y:
             xy_coeff = 0
         B2 = noise[0]
-        A = coeff()*B2 + noise[1]
-        G1 = coeff()*A + coeff()*B2 + noise[2]
-        G2 = coeff()*B2 + noise[3]
-        Y = xy_coeff*A + coeff()*G1 + coeff()*G2 + noise[4]
+        A = fun(B2) + noise[1]
+        G1 = fun(A) + fun(B2) + noise[2]
+        G2 = fun(B2) + noise[3]
+        Y = xy_coeff*A**exp + fun(G1) + fun(G2) + noise[4]
             
         df = pd.DataFrame({"A": A.reshape(-1), 
                            "Y": Y.reshape(-1), 
